@@ -1,0 +1,23 @@
+Communication protocol:
+
+- Turning on the device, start a 3s timer (indicate Starting... on the button), send all the settings through
+    to the microcontroller (device_properties) (send_settings method)
+    + only send data to the microcontroller
+    + turns off receiver
+- Settings include: power rating, voltage, max current, and protection
+    + sends the type of load first (this includes the number of settings)
+    + individual settings are sent through
+    + if the number of settings received is sufficient, send acknowledgement signal, else settings sent failed.
+- Acknowledgement signals from the microcontroller (Settings updated successfully.)
+    + change the power button from Starting... to ON
+
+- Start the main receiving loop on the CCN and sending loop on the microcontroller
+    + Microcontroller receives acknowledgement signals from the CCN
+    + CCN receives instantaneous V and I
+    + Transmission package includes device ID
+    + 
+- Each device has its own ID
+
+- Microcontroller sends V, I through to the CCN, while the CCN sends back a signal indicating healthy transmission
+
+- When turning off, sends a stopping signal to the microcontroller (PWM=0) with acknowledgement.
