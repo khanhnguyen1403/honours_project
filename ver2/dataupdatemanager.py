@@ -7,7 +7,6 @@ from excel_exporter import ExcelExporter
 
 class DataUpdateManager:
     """Manages the real-time data updates for all appliances"""
-    
     def __init__(self, appliances, value_generator, left_gui, right_gui):
         self.appliances = appliances
         self.value_generator = value_generator

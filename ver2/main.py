@@ -35,10 +35,10 @@ if __name__ == "__main__":
     
     # Create random value generator and set parameters
     value_generator = RandomValueGenerator()
-    value_generator.set_appliance_parameters("Washing Machine", 500, 5)  # 5% variation
-    value_generator.set_appliance_parameters("Air Conditioner", 1200, 5)  # 5% variation
-    value_generator.set_appliance_parameters("Heater", 800, 1)  # 1% variation
-    
+    value_generator.set_appliance_parameters("Washing Machine", washing_machine.power_rating, 5)  # 5% variation
+    value_generator.set_appliance_parameters("Air Conditioner", air_conditioner.power_rating, 5)  # 5% variation
+    value_generator.set_appliance_parameters("Heater", heater.power_rating, 1)  # 1% variation
+
     # Initialize summary with current appliance data
     appliance_summary.update_from_appliances(appliances)
     

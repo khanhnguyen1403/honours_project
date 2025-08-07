@@ -1,6 +1,9 @@
 from tkinter import *
 
 class RootGUI: 
+    """
+    Root GUI class initializes the main application window and sets up the layout.
+    """
     def __init__(self):
         self.root = Tk()
         self.root.title("DC Nanogrid Control Panel")

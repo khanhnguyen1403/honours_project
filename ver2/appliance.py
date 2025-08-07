@@ -11,16 +11,15 @@ class Appliance:
         self.type = 0  # 0: load, 1: source, 2: storage
         self.voltage_rating = 0
         self.power_rating = 0
-        self.power = [0] * 300  # Array of 300 elements for power values
-        self.voltage = 0
-        self.current = 0
+        self.power = [0] * 300  # Array of 300 elements for power values (5mins)
+        self.pwm = 0 # Pulse Width Modulation 
+        self.fm = 0 # Frequency Modulation
         self.time_operated = 0 # in seconds
         self.energy_used = 0  # kWh
         self.fault = False
-        
+
         # Additional properties for different appliance types
         # Load properties
-        self.max_current = 0
         self.overvoltage_threshold = 0
         self.undervoltage_threshold = 0
         self.differential_threshold = 0
@@ -31,9 +30,9 @@ class Appliance:
         
         # Storage properties
         self.capacity = 0
-        self.max_charge_current = 0
-        self.max_discharge_current = 0
-        
+        self.fm_charge = 0
+        self.fm_discharge = 0
+
         # Tracking variables
         self.power_on_time = 0  # Track time when appliance is on
         self.last_update_time = time.time()
@@ -50,21 +49,18 @@ class Appliance:
             self.power_on_time += (current_time - self.last_update_time)
             self.time_operated = int(self.power_on_time)
             
-            # Update energy used (simplified calculation)
             # Energy = Power * Time (in kWh)
             self.energy_used += (new_power_value * (current_time - self.last_update_time)) / 3600000  # Convert to kWh
         
         self.last_update_time = current_time
 
-    def get_current_power(self): #instantaneous power 
+    def get_current_power(self): # Instantaneous power 
         return self.power[-1]
 
-    def get_power_history(self): #return the array
+    def get_power_history(self): # Return the array
         return self.power.copy()
 
-    # MISSING METHODS - ADD THESE:
     def properties(self):
-        """Return all properties as a dictionary"""
         return {
             'name': self.name,
             'type': self.type,
@@ -72,8 +68,8 @@ class Appliance:
             'voltage_rating': self.voltage_rating,
             'power_rating': self.power_rating,
             'current_power': self.get_current_power(),
-            'voltage': self.voltage,
-            'current': self.current,
+            'pwm': self.pwm,
+            'fm': self.fm,
             'energy_used': self.energy_used,
             'time_operated': self.time_operated,
             'fault': self.fault
@@ -86,6 +82,7 @@ class Appliance:
             self.power_status = True
             # Reset timing when turned on
             self.last_update_time = time.time()
+
 
     def get_status_text(self):
         return "ON" if self.power_status else "OFF"
@@ -189,7 +186,6 @@ class Appliance_Summary:
         # Update net power (generation - consumption)
         self.power_rating = total_generation - total_consumption
 
-    # MISSING METHODS - ADD THESE FOR COMPATIBILITY:
     def properties(self):
         """Return summary properties for 'All' appliances"""
         return {
