@@ -1,15 +1,5 @@
 from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox as msgbox
-import matplotlib.pyplot as plt
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-import threading
-import datetime
 import random
-import time
-from datetime import datetime, timedelta
-import matplotlib.dates as mdates
-
 
 class RandomValueGenerator: #testing purposes
     def __init__(self):
