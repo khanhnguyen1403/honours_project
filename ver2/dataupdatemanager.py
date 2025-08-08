@@ -15,6 +15,9 @@ class DataUpdateManager:
         self.running = False
         self.update_thread = None
         
+        # Give right_gui access to value_generator for settings updates
+        self.right_gui.value_generator = value_generator
+        
         # Excel export functionality
         self.excel_exporter = ExcelExporter(appliances, right_gui)
         self.last_export_time = None
@@ -40,8 +43,8 @@ class DataUpdateManager:
                     if name == "All" or appliance is None:
                         continue
                         
-                    # Generate new power value
-                    new_power = self.value_generator.generate_value(name, appliance.power_status)
+                    # Generate new power value (pass appliance object so it can check current ratings)
+                    new_power = self.value_generator.generate_value(name, appliance, appliance.power_status)
                     appliance.update_power_value(new_power)
                 
                 # Update summary appliance
@@ -112,4 +115,5 @@ class DataUpdateManager:
         if hasattr(self.right_gui, 'refresh_settings_if_visible'):
             self.right_gui.refresh_settings_if_visible()
             
+
 

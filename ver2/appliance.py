@@ -15,7 +15,7 @@ class Appliance:
         self.pwm = 0 # Pulse Width Modulation 
         self.fm = 0 # Frequency Modulation
         self.time_operated = 0 # in seconds
-        self.energy_used = 0  # kWh
+        self.energy_used = 0  # Wh
         self.fault = False
 
         # Additional properties for different appliance types
@@ -50,7 +50,7 @@ class Appliance:
             self.time_operated = int(self.power_on_time)
             
             # Energy = Power * Time (in kWh)
-            self.energy_used += (new_power_value * (current_time - self.last_update_time)) / 3600000  # Convert to kWh
+            self.energy_used += (new_power_value * (current_time - self.last_update_time)) / 3600  # Convert to Wh
         
         self.last_update_time = current_time
 

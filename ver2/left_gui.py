@@ -132,7 +132,7 @@ class Left_GUI:
         # Get the appliance's power history data
         power_history = appliance.get_power_history()
         
-        # Update only the y-data (power values), x-axis remains fixed
+        # Update only the power values, x-axis remains fixed
         self.line.set_ydata(power_history)
         
         # Configure graph labels based on appliance type
@@ -216,7 +216,7 @@ class Left_GUI:
         
         # Configure labels for individual appliance properties
         self.label_stats1.config(text="Power:")
-        self.label_stats2.config(text="PWM:")
+        self.label_stats2.config(text="Duty Cycle:")
         self.label_stats3.config(text="Frequency:")
         self.label_stats4.config(text="Energy used:")
         self.label_stats5.config(text="Time operated:")
@@ -272,6 +272,163 @@ class Left_GUI:
         for widget in self.frame_stats.winfo_children():
             widget.grid_forget()
 
+    # Type-specific layout methods
+    def _setup_load_layout(self):
+        """
+        Configure the properties panel layout for Load appliances.
+        Power (W), Duty Cycle (%), Frequency (kHz), Energy Used (Wh), Time Operated (sec), Fault.
+        """
+        self._clear_stats_frame()
+        
+        # Configure labels for load appliance properties
+        self.label_stats1.config(text="Power:")
+        self.label_stats2.config(text="Duty Cycle:")
+        self.label_stats3.config(text="Frequency:")
+        self.label_stats4.config(text="Energy Used:")
+        self.label_stats5.config(text="Time Operated:")
+        self.label_stats6.config(text="Fault:")
+
+        # Position property labels in left columns
+        self.label_stats1.grid(row=0, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats2.grid(row=1, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats3.grid(row=2, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats4.grid(row=0, column=3, padx=5, pady=3, sticky="w") 
+        self.label_stats5.grid(row=1, column=3, padx=5, pady=3, sticky="w")
+        self.label_stats6.grid(row=2, column=3, padx=5, pady=3, sticky="w") 
+
+        # Position value labels in right columns
+        self.label_stats1_value.grid(row=0, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats2_value.grid(row=1, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats3_value.grid(row=2, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats4_value.grid(row=0, column=4, padx=5, pady=3, sticky="e") 
+        self.label_stats5_value.grid(row=1, column=4, padx=5, pady=3, sticky="e")
+        self.label_stats6_value.grid(row=2, column=4, padx=5, pady=3, sticky="e")
+
+    def _setup_source_layout(self):
+        """
+        Configure the properties panel layout for Source appliances.
+        """
+        self._clear_stats_frame()
+        
+        # Configure labels for source appliance properties
+        self.label_stats1.config(text="Power:")
+        self.label_stats2.config(text="Duty Cycle:")
+        self.label_stats3.config(text="Frequency:")
+        self.label_stats4.config(text="Energy Generated:")
+        self.label_stats5.config(text="Time Operated:")
+        self.label_stats6.config(text="Fault:")
+
+        # Position property labels in left columns
+        self.label_stats1.grid(row=0, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats2.grid(row=1, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats3.grid(row=2, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats4.grid(row=0, column=3, padx=5, pady=3, sticky="w") 
+        self.label_stats5.grid(row=1, column=3, padx=5, pady=3, sticky="w")
+        self.label_stats6.grid(row=2, column=3, padx=5, pady=3, sticky="w") 
+
+        # Position value labels in right columns
+        self.label_stats1_value.grid(row=0, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats2_value.grid(row=1, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats3_value.grid(row=2, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats4_value.grid(row=0, column=4, padx=5, pady=3, sticky="e") 
+        self.label_stats5_value.grid(row=1, column=4, padx=5, pady=3, sticky="e")
+        self.label_stats6_value.grid(row=2, column=4, padx=5, pady=3, sticky="e")
+
+    def _setup_storage_layout(self):
+        """
+        Configure the properties panel layout for Storage appliances.
+        """
+        self._clear_stats_frame()
+        
+        # Configure labels for storage appliance properties
+        self.label_stats1.config(text="SOC:")
+        self.label_stats2.config(text="Duty Cycle:")
+        self.label_stats3.config(text="Frequency:")
+        self.label_stats4.config(text="State:")
+        self.label_stats5.config(text="Energy:")
+        self.label_stats6.config(text="Fault:")
+
+        # Position property labels in left columns
+        self.label_stats1.grid(row=0, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats2.grid(row=1, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats3.grid(row=2, column=0, padx=5, pady=3, sticky='w')
+        self.label_stats4.grid(row=0, column=3, padx=5, pady=3, sticky="w") 
+        self.label_stats5.grid(row=1, column=3, padx=5, pady=3, sticky="w")
+        self.label_stats6.grid(row=2, column=3, padx=5, pady=3, sticky="w") 
+
+        # Position value labels in right columns
+        self.label_stats1_value.grid(row=0, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats2_value.grid(row=1, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats3_value.grid(row=2, column=1, padx=5, pady=3, sticky='e')
+        self.label_stats4_value.grid(row=0, column=4, padx=5, pady=3, sticky="e") 
+        self.label_stats5_value.grid(row=1, column=4, padx=5, pady=3, sticky="e")
+        self.label_stats6_value.grid(row=2, column=4, padx=5, pady=3, sticky="e")
+
+    # Type-specific display update methods
+    def _update_load_display(self, appliance):
+        """
+        Update display values for Load appliances.
+        """
+        # Calculate current electrical parameters
+        current_power = appliance.get_current_power() if appliance.power_status else 0
+
+        energy_used = getattr(appliance, 'energy_used', 0) * 1000  # Convert to Wh
+        
+        # Format and display load appliance statistics
+        self.label_stats1_value.config(text=f"{current_power:.1f} W")
+        self.label_stats2_value.config(text=f"{appliance.pwm:.1f} %")
+        self.label_stats3_value.config(text=f"{appliance.fm:.2f} kHz")
+        self.label_stats4_value.config(text=f"{energy_used:.1f} Wh")
+        self.label_stats5_value.config(text=f"{appliance.time_operated} sec")
+        self.label_stats6_value.config(text="Fault" if appliance.fault else "No Fault")
+
+    def _update_source_display(self, appliance):
+        """
+        Update display values for Source appliances.
+        """
+        # Calculate current electrical parameters
+        current_power = appliance.get_current_power() if appliance.power_status else 0
+        duty_cycle = getattr(appliance, 'pwm', 0)  # Duty cycle from PWM
+        frequency = getattr(appliance, 'fm', 0)    # Frequency
+        energy_generated = getattr(appliance, 'energy_used', 0) * 1000  # Convert to Wh (for sources, this represents generated)
+        
+        # Format and display source appliance statistics
+        self.label_stats1_value.config(text=f"{current_power:.1f} W")
+        self.label_stats2_value.config(text=f"{duty_cycle:.1f} %")
+        self.label_stats3_value.config(text=f"{frequency:.2f} kHz")
+        self.label_stats4_value.config(text=f"{energy_generated:.1f} Wh")
+        self.label_stats5_value.config(text=f"{appliance.time_operated} sec")
+        self.label_stats6_value.config(text="Fault" if appliance.fault else "No Fault")
+
+    def _update_storage_display(self, appliance):
+        """
+        Update display values for Storage appliances.
+        """
+        # Calculate storage-specific parameters
+        capacity = getattr(appliance, 'capacity', 1000)  # Default capacity if not set
+        energy_stored = getattr(appliance, 'energy_used', 0) * 1000  # Convert to Wh
+        soc = (energy_stored / capacity * 100) if capacity > 0 else 0  # State of Charge percentage
+        
+        duty_cycle = getattr(appliance, 'pwm', 0)  # Duty cycle from PWM
+        frequency = getattr(appliance, 'fm', 0)    # Frequency
+        
+        # Determine storage state based on power flow
+        current_power = appliance.get_current_power() if appliance.power_status else 0
+        if current_power > 0:
+            state = "Discharging"
+        elif current_power < 0:
+            state = "Charging"
+        else:
+            state = "Storing"
+        
+        # Format and display storage appliance statistics
+        self.label_stats1_value.config(text=f"{soc:.1f} %")
+        self.label_stats2_value.config(text=f"{duty_cycle:.1f} %")
+        self.label_stats3_value.config(text=f"{frequency:.2f} kHz")
+        self.label_stats4_value.config(text=state)
+        self.label_stats5_value.config(text=f"{energy_stored:.1f} Wh")
+        self.label_stats6_value.config(text="Fault" if appliance.fault else "No Fault")
+
     def update_appliance_display(self, appliance):
         """
         Update the properties panel if individual/summary appliance data is selected.
@@ -297,30 +454,29 @@ class Left_GUI:
             text=f"{appliance.total_power_generation:.1f} W"
         )
         self.label_stats3_value.config(
-            text=f"{appliance.total_energy_consumption:.3f} kWh"
+            text=f"{appliance.total_energy_consumption:.3f} Wh"
         )
         self.label_stats4_value.config(
-            text=f"{appliance.total_energy_generated:.3f} kWh"
+            text=f"{appliance.total_energy_generated:.3f} Wh"
         )
     
     def _update_individual_display(self, appliance):
         """
         Update display for individual appliance objects.
-        Shows detailed appliance metrics including electrical parameters and status.
+        Shows type-specific appliance metrics based on appliance type.
         """
-        self.setup_individual_appliance_layout()
+        # Setup layout based on appliance type
+        appliance_type = getattr(appliance, 'type', 0)
         
-        # Calculate current electrical parameters
-        current_power = appliance.get_current_power() if appliance.power_status else 0
-        
-        # Get PWM and frequency values
-        pwm_value = appliance.pwm
-        frequency_value = appliance.fm
-        
-        # Format and display individual appliance statistics
-        self.label_stats1_value.config(text=f"{current_power:.1f} W")
-        self.label_stats2_value.config(text=f"{pwm_value:.1f} %")
-        self.label_stats3_value.config(text=f"{frequency_value:.2f} kHz")
-        self.label_stats4_value.config(text=f"{appliance.energy_used:.3f} kWh")
-        self.label_stats5_value.config(text=f"{appliance.time_operated} sec")
-        self.label_stats6_value.config(text="Fault" if appliance.fault else "No Fault")
+        if appliance_type == 0:  # Load
+            self._setup_load_layout()
+            self._update_load_display(appliance)
+        elif appliance_type == 1:  # Source
+            self._setup_source_layout()
+            self._update_source_display(appliance)
+        elif appliance_type == 2:  # Storage
+            self._setup_storage_layout()
+            self._update_storage_display(appliance)
+        else:  # Default/Unknown type
+            self._setup_load_layout()  # Default to load layout
+            self._update_load_display(appliance)

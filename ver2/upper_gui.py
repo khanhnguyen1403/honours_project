@@ -232,6 +232,16 @@ class Upper_GUI:
         error_label = Label(popup, text="", fg="red")
         error_label.pack()
         
+        # Handle Enter key to create appliance and Escape key to cancel
+        def handle_enter(event):
+            create_appliance()
+        
+        def handle_escape(event):
+            cancel_creation()
+        
+        # Bind keyboard events
+        popup.bind('<Return>', handle_enter)
+        name_entry.bind('<Return>', handle_enter)
 
     def _get_next_appliance_id(self):
         """

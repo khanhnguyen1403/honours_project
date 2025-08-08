@@ -18,6 +18,7 @@ class Right_GUI:
         self.upper_gui = upper_gui
         self.current_frame = None
         self.log_data = []  # Store persistent log data
+        self.value_generator = None  # Will be set by DataUpdateManager
         
         # Initialize with logs frame as default view
         self.createLogs(root)
@@ -79,7 +80,7 @@ class Right_GUI:
         self.current_appliance_for_settings = self._get_current_appliance()
         
         # Create dynamic settings based on selected type
-        self.create_dynamic_settings()
+        self.create_settings()
 
     def _create_type_selection(self):
         """
@@ -349,9 +350,11 @@ class Right_GUI:
         # Get all entry values
         for key, widget in self.setting_entries.items():
             if isinstance(widget, Entry):
-                settings_data[key] = widget.get()
+                value = widget.get()
+                settings_data[key] = value
             elif isinstance(widget, StringVar):
-                settings_data[key] = widget.get()
+                value = widget.get()
+                settings_data[key] = value
         
         return settings_data
 
@@ -381,7 +384,7 @@ class Right_GUI:
         property_mapping = {
             'setting_0': ('power_rating', 'Rated Power (W)'),
             'setting_1': ('voltage_rating', 'Rated Voltage (V)'),
-            'setting_2': ('max_current', 'Max Current (A)'),
+            'setting_2': ('fm', 'Frequency Modulation (kHz)'),
             'setting_3': ('overvoltage_threshold', 'Overvoltage Threshold (V)'),
             'setting_4': ('undervoltage_threshold', 'Undervoltage Threshold (V)'),
             'setting_5': ('differential_threshold', 'Differential Threshold (A)'),
@@ -396,7 +399,7 @@ class Right_GUI:
         property_mapping = {
             'setting_0': ('max_output_power', 'Max Output Power (W)'),
             'setting_1': ('voltage_rating', 'Output Voltage (V)'),
-            'setting_2': ('max_output_current', 'Max Output Current (A)'),
+            'setting_2': ('fm', 'Frequency Modulation (kHz)'),
             'setting_3': ('undervoltage_threshold', 'Undervoltage Threshold (V)'),
         }
         
@@ -409,8 +412,8 @@ class Right_GUI:
         property_mapping = {
             'setting_0': ('capacity', 'Capacity (Wh)'),
             'setting_1': ('voltage_rating', 'Rated Voltage (V)'),
-            'setting_2': ('max_charge_current', 'Max Charge Current (A)'),
-            'setting_3': ('max_discharge_current', 'Max Discharge Current (A)'),
+            'setting_2': ('fm_discharge', 'Discharge Frequency Modulation (kHz)'),
+            'setting_3': ('fm_charge', 'Charging Frequency Modulation (kHz)'),
         }
         
         self._apply_property_updates(appliance, settings_data, property_mapping)
@@ -432,12 +435,12 @@ class Right_GUI:
                 
             try:
                 # Convert to float and set property
-                setattr(appliance, property_name, float(value))
+                float_value = float(value)
+                setattr(appliance, property_name, float_value)
+                    
             except ValueError:
                 # Log warning for invalid values
                 self.log_events(f"Warning: Invalid value '{value}' for {display_name}")
-        
-        # Log successful update - moved to parent method to avoid duplication
         
     def log_events(self, message):
         """
