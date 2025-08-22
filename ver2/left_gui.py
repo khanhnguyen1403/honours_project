@@ -77,7 +77,7 @@ class Left_GUI:
         self.label_stats1_value = Label(self.frame_stats, text="0 W", bg="white")
         self.label_stats2_value = Label(self.frame_stats, text="0 %", bg="white")
         self.label_stats3_value = Label(self.frame_stats, text="0 kHz", bg="white")
-        self.label_stats4_value = Label(self.frame_stats, text="0 kWh", bg="white")
+        self.label_stats4_value = Label(self.frame_stats, text="0 Wh", bg="white")
         self.label_stats5_value = Label(self.frame_stats, text="0 min", bg="white")
         self.label_stats6_value = Label(self.frame_stats, text="No Fault", bg="white")
 
@@ -505,7 +505,7 @@ class Left_GUI:
         # Calculate current electrical parameters
         current_power = appliance.get_current_power() if appliance.power_status else 0
 
-        energy_used = getattr(appliance, 'energy_used', 0) * 1000  # Convert to Wh
+        energy_used = getattr(appliance, 'energy_used', 0)  # Already in Wh
         
         # Format and display load appliance statistics
         self.label_stats1_value.config(text=f"{current_power:.1f} W")
@@ -523,7 +523,7 @@ class Left_GUI:
         current_power = appliance.get_current_power() if appliance.power_status else 0
         duty_cycle = getattr(appliance, 'pwm', 0)  # Duty cycle from PWM
         frequency = getattr(appliance, 'fm', 0)    # Frequency
-        energy_generated = getattr(appliance, 'energy_used', 0) * 1000  # Convert to Wh (for sources, this represents generated)
+        energy_generated = getattr(appliance, 'energy_used', 0)  # Already in Wh (for sources, this represents generated)
         
         # Format and display source appliance statistics
         self.label_stats1_value.config(text=f"{current_power:.1f} W")
@@ -539,7 +539,7 @@ class Left_GUI:
         """
         # Calculate storage-specific parameters
         capacity = getattr(appliance, 'capacity', 1000)  # Default capacity if not set
-        energy_stored = getattr(appliance, 'energy_used', 0) * 1000  # Convert to Wh
+        energy_stored = getattr(appliance, 'energy_used', 0)  # Already in Wh
         soc = (energy_stored / capacity * 100) if capacity > 0 else 0  # State of Charge percentage
         
         duty_cycle = getattr(appliance, 'pwm', 0)  # Duty cycle from PWM
