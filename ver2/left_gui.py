@@ -20,9 +20,16 @@ class Left_GUI:
         self.root = root
         self.data = data 
         self.current_appliance = None  # Track currently displayed appliance
+        self.appliances = {}  # Reference to all appliances for summary view
         
         # Initialize GUI components
         self.addFrame()
+
+    def set_appliances(self, appliances):
+        """
+        Set the appliances reference for multi-line graph display.
+        """
+        self.appliances = appliances
         
     def addFrame(self):
         """
@@ -102,6 +109,11 @@ class Left_GUI:
         # Initialize power data line with zeros
         self.line, = self.ax.plot(self.time_axis, [0] * 300, label='Power')
         
+        # Initialize storage for multiple lines (for summary view)
+        self.appliance_lines = {}  # Store individual appliance lines
+        self.appliance_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', 
+                                '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+        
         # Set fixed x-axis limits for the time window
         self.ax.set_xlim(start_time, end_time)
         
@@ -129,26 +141,129 @@ class Left_GUI:
         # Store reference to current appliance for refresh operations
         self.current_appliance = appliance
         
-        # Get the appliance's power history data
-        power_history = appliance.get_power_history()
-        
-        # Update only the power values, x-axis remains fixed
-        self.line.set_ydata(power_history)
-        
-        # Configure graph labels based on appliance type
+        # Check if this is a summary view
         if isinstance(appliance, Appliance_Summary):
-            self.ax.set_ylabel('Net Power (W)')  # Summary shows net power
+            self._update_summary_graph(appliance)
         else:
-            self.ax.set_ylabel('Power (W)')      # Individual appliances show power
-        
-        # Calculate appropriate y-axis limits
-        self._calculate_y_axis_limits(power_history, appliance)
+            self._update_individual_graph(appliance)
         
         # Optimize layout to prevent label cutoff
         self.fig.tight_layout()
         
         # Refresh the display
         self.canvas.draw()
+
+    def _update_individual_graph(self, appliance):
+        """
+        Update graph for individual appliance (single line).
+        """
+        # Clear any existing appliance lines from summary view
+        self._clear_appliance_lines()
+        
+        # Show the main line and hide legend
+        self.line.set_visible(True)
+        self.ax.legend().set_visible(False) if self.ax.get_legend() else None
+        
+        # Get the appliance's power history data
+        power_history = appliance.get_power_history()
+        
+        # Update only the power values, x-axis remains fixed
+        self.line.set_ydata(power_history)
+        self.line.set_label(f"{appliance.name} Power")
+        
+        # Configure graph labels
+        self.ax.set_ylabel('Power (W)')
+        
+        # Calculate appropriate y-axis limits
+        self._calculate_y_axis_limits(power_history, appliance)
+
+    def _update_summary_graph(self, summary_appliance):
+        """
+        Update graph for summary view (multiple lines for each appliance).
+        """
+        # Hide the main line for summary view
+        self.line.set_visible(False)
+        
+        # Get all appliances
+        appliances = self._get_all_appliances()
+        
+        # Clear existing appliance lines
+        self._clear_appliance_lines()
+        
+        # Create lines for each individual appliance
+        color_index = 0
+        max_power = 0
+        min_power = 0
+        
+        for name, appliance in appliances.items():
+            if name == "All" or appliance is None:
+                continue
+                
+            # Get power history for this appliance
+            power_history = appliance.get_power_history()
+            if not power_history:
+                continue
+            
+            # Get color for this appliance
+            color = self.appliance_colors[color_index % len(self.appliance_colors)]
+            
+            # Create line for this appliance
+            line, = self.ax.plot(self.time_axis, power_history, 
+                               label=f"{name}", color=color, linewidth=2)
+            self.appliance_lines[name] = line
+            
+            # Track min/max for y-axis scaling
+            max_power = max(max_power, max(power_history))
+            min_power = min(min_power, min(power_history))
+            
+            color_index += 1
+        
+        # Add net power line (consumption - generation)
+        net_power_history = summary_appliance.get_power_history()
+        net_line, = self.ax.plot(self.time_axis, net_power_history, 
+                               label="Net Power", color='black', linewidth=2)
+        self.appliance_lines["Net Power"] = net_line
+        
+        # Include net power in min/max calculations
+        if net_power_history:
+            max_power = max(max_power, max(net_power_history))
+            min_power = min(min_power, min(net_power_history))
+        
+        # Update y-axis limits based on all appliances with 10% padding
+        if max_power > 0 or min_power < 0:
+            # Calculate 10% padding based on the maximum absolute value
+            y_range = max_power - min_power
+            y_padding = max(y_range * 0.1, abs(max_power) * 0.1, abs(min_power) * 0.1) if y_range > 0 else max_power * 0.1
+            
+            # Set minimum to 0 unless there are negative values
+            y_min = min_power - y_padding if min_power < 0 else 0
+            y_max = max_power + y_padding
+            
+            self.ax.set_ylim(y_min, y_max)
+        else:
+            self.ax.set_ylim(0, 10)
+        
+        # Configure graph labels and legend (moved to left side)
+        self.ax.set_ylabel('Power (W)')
+        self.ax.legend(loc='upper left', fontsize=8)
+
+    def _clear_appliance_lines(self):
+        """
+        Clear all individual appliance lines from the graph.
+        """
+        for line in self.appliance_lines.values():
+            line.remove()
+        self.appliance_lines.clear()
+        
+        # Clear legend if it exists
+        if self.ax.get_legend():
+            self.ax.get_legend().remove()
+
+    def _get_all_appliances(self):
+        """
+        Get all appliances for multi-line graph display.
+        """
+        return self.appliances
 
     def _calculate_y_axis_limits(self, power_history, appliance):
         """
@@ -200,6 +315,10 @@ class Left_GUI:
         
         # Update the line's x-data with new time axis
         self.line.set_xdata(self.time_axis)
+        
+        # Update all appliance lines' x-data if in summary view
+        for line in self.appliance_lines.values():
+            line.set_xdata(self.time_axis)
         
         # Increment data counter for tracking
         self.data_count += 1

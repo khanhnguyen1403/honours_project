@@ -48,6 +48,7 @@ if __name__ == "__main__":
     right_gui = Right_GUI(root_gui.root, upper_gui)
     upper_gui.right_gui = right_gui
     left_gui = Left_GUI(root_gui.root, 0)
+    left_gui.set_appliances(appliances)  # Set appliances reference for multi-line graphs
     upper_gui.left_gui = left_gui
 
     # Create and start data update manager
