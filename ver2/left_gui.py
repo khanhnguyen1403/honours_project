@@ -107,12 +107,27 @@ class Left_GUI:
             self.time_axis.append(timestamp)
     
         # Initialize power data line with zeros
-        self.line, = self.ax.plot(self.time_axis, [0] * 300, label='Power')
+        self.line, = self.ax.plot(self.time_axis, [0] * 300)
         
         # Initialize storage for multiple lines (for summary view)
         self.appliance_lines = {}  # Store individual appliance lines
-        self.appliance_colors = ['#1f77b4', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', 
-                                '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+        self.appliance_colors = [
+            '#1f77b4',  # Blue
+            '#ff7f0e',  # Orange
+            '#2ca02c',  # Green
+            '#d62728',  # Red
+            '#9467bd',  # Purple
+            '#8c564b',  # Brown
+            '#e377c2',  # Pink
+            '#7f7f7f',  # Gray
+            '#bcbd22',  # Olive
+            '#17becf',  # Cyan
+            '#ff1493',  # Deep Pink
+            '#00ff7f',  # Spring Green
+            '#ffd700',  # Gold
+            '#4169e1',  # Royal Blue
+            '#dc143c'   # Crimson
+        ]
         
         # Set fixed x-axis limits for the time window
         self.ax.set_xlim(start_time, end_time)
@@ -155,7 +170,7 @@ class Left_GUI:
 
     def _update_individual_graph(self, appliance):
         """
-        Update graph for individual appliance (single line).
+        Update graph for individual appliance.
         """
         # Clear any existing appliance lines from summary view
         self._clear_appliance_lines()
@@ -169,7 +184,6 @@ class Left_GUI:
         
         # Update only the power values, x-axis remains fixed
         self.line.set_ydata(power_history)
-        self.line.set_label(f"{appliance.name} Power")
         
         # Configure graph labels
         self.ax.set_ylabel('Power (W)')
@@ -179,7 +193,7 @@ class Left_GUI:
 
     def _update_summary_graph(self, summary_appliance):
         """
-        Update graph for summary view (multiple lines for each appliance).
+        Update graph for summary view.
         """
         # Hide the main line for summary view
         self.line.set_visible(False)
@@ -243,7 +257,7 @@ class Left_GUI:
         else:
             self.ax.set_ylim(0, 10)
         
-        # Configure graph labels and legend (moved to left side)
+        # Configure graph labels and legend 
         self.ax.set_ylabel('Power (W)')
         self.ax.legend(loc='upper left', fontsize=8)
 
